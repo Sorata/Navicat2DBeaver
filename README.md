@@ -1,0 +1,2 @@
+# Navicat2DBeaver
+转换Navicat导出的带密码的connections.ncx为DBeaver使用的数据库配置文件data-sources.json
