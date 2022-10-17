@@ -22,51 +22,51 @@ foreach ($xml['Connection'] as $connection) {
     $id       = 'mysql8-'.substr($id, 0, 11).'-'.substr($id, 12, 16);
     if (empty($sshKey)) {
         $output[$id]         = [
-			'provider'       => 'mysql',
-			'driver'         => 'mysql8',
+            'provider'       => 'mysql',
+            'driver'         => 'mysql8',
             'name'           => $name,
             'save-password'  => true,
             'read-only'      => false,
             'configuration'  => [
-				'host'       => $host,
-				'port'       => $port,
-				'url'        => "jdbc:mysql://{$host}:{$port}/",
-				'home'       => 'mysql_client',
-				'type'       => 'dev',
-				'auth-model' => 'native',
-				'handlers'   => (object)[]
+                'host'       => $host,
+                'port'       => $port,
+                'url'        => "jdbc:mysql://{$host}:{$port}/",
+                'home'       => 'mysql_client',
+                'type'       => 'dev',
+                'auth-model' => 'native',
+                'handlers'   => (object)[]
             ]
         ];
     } else {
         $output[$id]         = [
-			'provider'       => 'mysql',
-			'driver'         => 'mysql8',
+            'provider'       => 'mysql',
+            'driver'         => 'mysql8',
             'name'           => $name,
             'save-password'  => true,
             'read-only'      => false,
             'configuration'  => [
-				'host'       => $host,
-				'port'       => $port,
-				'url'        => "jdbc:mysql://{$host}:{$port}/",
-				'home'       => 'mysql_client',
-				'type'       => 'dev',
-				'auth-model' => 'native',
-				'handlers'   => [
-					'ssh_tunnel'                     => [
-						'type'                       =>  'TUNNEL',
-						'enabled'                    =>  true,
-						'save-password'              =>  true,
-						'properties'                 =>  [
-							'host'                   =>  $sshPort,
-							'port'                   =>  $sshHost,
-							'authType'               =>  'PUBLIC_KEY',
-							'keyPath'                =>  $sshKey,
-							'implementation'         =>  'sshj',
-							'bypassHostVerification' =>  false,
-							'localHost'              =>  '',
-							'remoteHost'             =>  ''
-						]
-					]
+                'host'       => $host,
+                'port'       => $port,
+                'url'        => "jdbc:mysql://{$host}:{$port}/",
+                'home'       => 'mysql_client',
+                'type'       => 'dev',
+                'auth-model' => 'native',
+                'handlers'   => [
+                    'ssh_tunnel'                     => [
+                        'type'                       =>  'TUNNEL',
+                        'enabled'                    =>  true,
+                        'save-password'              =>  true,
+                        'properties'                 =>  [
+                            'host'                   =>  $sshPort,
+                            'port'                   =>  $sshHost,
+                            'authType'               =>  'PUBLIC_KEY',
+                            'keyPath'                =>  $sshKey,
+                            'implementation'         =>  'sshj',
+                            'bypassHostVerification' =>  false,
+                            'localHost'              =>  '',
+                            'remoteHost'             =>  ''
+                        ]
+                    ]
                 ]
             ]
         ];
