@@ -8,12 +8,14 @@ $xml             = simplexml_load_string(file_get_contents('connections.ncx')); 
 $xml             = json_encode($xml); //objecct转json
 $xml             = json_decode($xml, true); //json转array
 $output          = [];
+$credentials     = [];
 $navicatPassword = new NavicatPassword(12);
 foreach ($xml['Connection'] as $connection) {
     $detail   = $connection['@attributes'];
     $name     = $detail['ConnectionName'];
     $host     = $detail['Host'];
     $port     = $detail['Port'];
+    $user     = $detail['UserName'];
     $password = $navicatPassword->decrypt($detail['Password']);
     $sshKey   = $detail['SSH_PrivateKey']??'';
     $sshPort  = $detail['SSH_Port']??'';
@@ -70,7 +72,14 @@ foreach ($xml['Connection'] as $connection) {
                 ]
             ]
         ];
-        
+    }
+    if (!empty($user)) {
+        $credentials[$id]  =  [
+            '#connection'  => [
+                'user'     => $user,
+                'password' => $password,
+            ]
+        ];
     }
 }
 $output = [
@@ -88,7 +97,12 @@ $output = [
         ],
     ],
 ];
+$begin   = 'aNj9VgFMUBvf3nfEBgaGQg==';
+$tmpFile = 'credentials.json';
 file_put_contents('data-sources.json', json_encode($output, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+file_put_contents($tmpFile, base64_decode($begin).json_encode($credentials));
+shell_exec('openssl aes-128-cbc -e -nosalt -K babb4a9f774ab853c96c2d653dfe544a -iv 00000000000000000000000000000000 -in credentials.json -out credentials-config.json');
+unlink($tmpFile);
 
 class NavicatPassword
 {
